@@ -12,6 +12,7 @@ class Snake:
         self.segments = []
         self.screen = Screen()
         self.create_snake()
+        self.head = Turtle()
 
     def create_snake(self):
         self.screen.setup(width=600, height=600)
@@ -34,27 +35,27 @@ class Snake:
             new_segment.penup()
             new_segment.goto(position)
             self.segments.append(new_segment)
+        self.head = self.segments[0]
         self.screen.update()
 
-    def move(self, heading):
+    def move(self):
         for seg_num in range(len(self.segments) - 1, 0, -1):
             self.segments[seg_num].goto(self.segments[seg_num - 1].pos())
         self.segments[0].forward(MOVE_DISTANCE)
-        self.segments[0].setheading(heading)
         self.screen.update()
         time.sleep(0.1)
 
     def move_up(self):
-        self.move(90)
+        self.head.setheading(90)
 
     def move_down(self):
-        self.move(270)
+        self.head.setheading(270)
 
     def move_left(self):
-        self.move(180)
+        self.head.setheading(180)
 
     def move_right(self):
-        self.move(0)
+        self.head.setheading(0)
 
     def finish(self):
         self.screen.exitonclick()
