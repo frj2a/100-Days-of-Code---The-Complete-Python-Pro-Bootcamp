@@ -3,6 +3,10 @@ import time
 import random
 
 MOVE_DISTANCE = 20
+UP = 90
+DOWN = 270
+LEFT = 180
+RIGHT = 0
 
 STARTING_POSITIONS = [(0, 0), (-MOVE_DISTANCE, 0), (-2 * MOVE_DISTANCE, 0)]
 
@@ -12,7 +16,7 @@ class Snake:
         self.segments = []
         self.screen = Screen()
         self.create_snake()
-        self.head = Turtle()
+        self.head = self.segments[0]
 
     def create_snake(self):
         self.screen.setup(width=600, height=600)
@@ -35,27 +39,30 @@ class Snake:
             new_segment.penup()
             new_segment.goto(position)
             self.segments.append(new_segment)
-        self.head = self.segments[0]
         self.screen.update()
 
     def move(self):
         for seg_num in range(len(self.segments) - 1, 0, -1):
             self.segments[seg_num].goto(self.segments[seg_num - 1].pos())
-        self.segments[0].forward(MOVE_DISTANCE)
+        self.head.forward(MOVE_DISTANCE)
         self.screen.update()
         time.sleep(0.1)
 
     def move_up(self):
-        self.head.setheading(90)
+        if self.head.heading() != DOWN:
+            self.head.setheading(UP)
 
     def move_down(self):
-        self.head.setheading(270)
+        if self.head.heading() != UP:
+            self.head.setheading(DOWN)
 
     def move_left(self):
-        self.head.setheading(180)
+        if self.head.heading() != RIGHT:
+            self.head.setheading(LEFT)
 
     def move_right(self):
-        self.head.setheading(0)
+        if self.head.heading() != LEFT:
+            self.head.setheading(RIGHT)
 
     def finish(self):
         self.screen.exitonclick()
