@@ -43,11 +43,15 @@ while game_is_on:
     # Detect R paddle misses: (ball leaving the game area)
     if ball.xcor() > 400:
         ball.reset_position()
-        scoreboard.increase_l_score()
+        game_is_on = scoreboard.increase_l_score()
+        if not game_is_on:
+            scoreboard.game_over("You loose!")
 
     # Detect R paddle misses: (ball leaving the game area)
     if ball.xcor() < -400:
         ball.reset_position()
-        scoreboard.increase_r_score()
+        game_is_on = scoreboard.increase_r_score()
+        if not game_is_on:
+            scoreboard.game_over("You win!")
 
 screen.exitonclick()

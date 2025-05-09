@@ -28,16 +28,24 @@ class ScoreBoard(Turtle):
         self.l_score += 1
         self.clear()
         self.update_scoreboard()
+        if self.l_score > 5:
+            return False
+        else:
+            return True
 
     def increase_r_score(self):
         self.r_score += 1
         self.clear()
         self.update_scoreboard()
+        if self.r_score > 5:
+            return False
+        else:
+            return True
 
-    def game_over(self):
+    def game_over(self, text):
         self.goto(0,0)
         self.color("red")
-        self.write("GAME OVER", align=ALIGNMENT, font=FONT)
+        self.write(f"GAME OVER: {text}", align=ALIGNMENT, font=FONT)
 
 
 SCREEN_WIDTH = 800
