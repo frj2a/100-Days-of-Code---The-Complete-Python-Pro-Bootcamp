@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
-from os import MFD_ALLOW_SEALING
+
 from turtle import Turtle, Screen
 import time
 
@@ -16,6 +16,7 @@ class Ball(Turtle):
         self.screen.update()
         self.x_move = 10
         self.y_move = 10
+        self.move_speed = 0.1
         self.testing = False
 
     def move(self):
@@ -31,9 +32,16 @@ class Ball(Turtle):
 
     def bounce_y(self):
         self.y_move = -self.y_move
+        self.move_speed *= 0.9
 
     def bounce_x(self):
         self.x_move = -self.x_move
+        self.move_speed *= 0.9
+
+    def reset_position(self):
+        self.setpos(0,0)
+        self.move_speed = 0.1
+        self.bounce_x()
 
 
 SCREEN_WIDTH = 800
@@ -43,7 +51,7 @@ if __name__ == "__main__":
     screen = Screen()
     screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT, startx=100, starty=100)
     screen.bgcolor("black")
-    screen.title("Pong Paddle")
+    screen.title("Pong Ball")
 
     ball = Ball()
     ball.testing = True
