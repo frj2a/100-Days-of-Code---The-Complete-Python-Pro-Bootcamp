@@ -32,10 +32,11 @@ while len(guesses) < state_count:
                 text_turtle.goto(state_data.x.item(), state_data.y.item())
                 text_turtle.write(state_data.state.item(), align="center", font=FONT)
     else:
-        missing_states = []
-        for state in states:
-            if state not in guesses:
-                missing_states.append(state)
+        # missing_states = []
+        # for state in states:
+        #     if state not in guesses:
+        #         missing_states.append(state)
+        missing_states = [state for state in states if state not in guesses] # back from Day 26 with comprehensions
         new_data = pandas.DataFrame(missing_states)
         new_data.to_csv("states_to_learn.csv")
         break
