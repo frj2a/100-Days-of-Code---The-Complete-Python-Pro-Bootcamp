@@ -1,6 +1,6 @@
-from itertools import cycle
-
 import pandas
+
+# https://data.cityofnewyork.us/Environment/2018-Central-Park-Squirrel-Census-Squirrel-Data/vfnx-vebw/about_data
 
 data = pandas.read_csv("2018_Central_Park_Squirrel_Census_-_Squirrel_Data_20250512.csv")
 
