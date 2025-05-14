@@ -27,14 +27,20 @@ print(entry.get())
 entry.pack()
 
 #Text
+def print_contents(e):
+    print(text.get(1.0, END))
 text = Text(height=5, width=30)
+#Disable simple edition triggers
+# text.edit_modified(False)
 #Puts cursor in textbox.
 text.focus()
 #Adds some text to begin with.
 text.insert(END, "Example of multi-line text entry.")
 #Gets current value in textbox at line 1, character 0
-print(text.get("1.0", END))
+#print(text.get("1.0", END))
+text.get(1.0, END)
 text.pack()
+text.bind("<Key-Return>", print_contents)
 
 #Spinbox
 def spinbox_used():
