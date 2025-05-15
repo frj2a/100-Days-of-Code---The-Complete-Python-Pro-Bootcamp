@@ -9,7 +9,7 @@ YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
 WORK_MIN = 2 # 25
 SHORT_BREAK_MIN = 1 # 5
-LONG_BREAK_MIN = 2 # 20
+LONG_BREAK_MIN = 3 # 20
 SECS_IN_MIN = 10 # 60
 
 time_start = time.time_ns()
@@ -25,84 +25,94 @@ phases = {
     6: { "time":WORK_MIN,"period":"Work"},
     7: { "time":LONG_BREAK_MIN, "period": "Long Break"},
 }
-phase = 0
+phase = len(phases)
+timer = None
 
 # ---------------------------- TIMER RESET ------------------------------- #
-def timer_reset():
-    global time_start, time_end
-    time_start = time.time_ns()
-    time_end = time_start - 1
+
+def reset_timer():
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text="00:00")
+    title_label.config(text="Timer")
+    check_marks.config(text="")
+    global phase
+    phase = 0
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 
-def get_time():
-    global time_end, time_start, phases, phase
-    time_end = time.time_ns()
-    time_now = (time_end - time_start) // 1_000_000_000
-    minutes = (phases[phase]["time"] - 1) - (time_now // SECS_IN_MIN)
-    seconds = SECS_IN_MIN - (time_now % SECS_IN_MIN) - 1
-    if time_now == phases[phase]["time"] * SECS_IN_MIN - 0:
-        phase += 1
-        if phase % 8 == 0:
-            title_label.config(fg=RED)
-        elif phase % 2 == 0:
-            title_label.config(fg=GREEN)
-        else:
-            title_label.config(fg=PINK)
-        phase = phase % len(phases)
-        title_label.config(text=phases[phase]["period"])
-        timer_reset()
-    return str(f"{minutes:02}:{seconds:02}"), phases[phase]["time"] * SECS_IN_MIN - time_now
-
 def start_timer():
-    title_label.config(text=phases[phase]["period"])
-    count_down()
+    global phase
+    phase += 1
+    if phase >= len(phases):
+        phase = 0
 
-def end_timer():
-    pass
+    if phases[phase]["time"] == LONG_BREAK_MIN:
+        title_label.config(text="Break", fg=RED)
+    elif phases[phase]["time"] == SHORT_BREAK_MIN:
+        title_label.config(text="Break", fg=PINK)
+    else:
+        title_label.config(text="Work", fg=GREEN)
 
+    count_down(phases[phase]["time"] * SECS_IN_MIN)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
+def count_down(count):
 
-def count_down():
-    timer_reset()
-    time_now = get_time()
-    canvas.itemconfig(time_text, text="")
-    canvas.itemconfig(time_text, text=time_now[0])
-    print(time_now[1])
-    window.after(1000, count_down)
+    count_min = count // SECS_IN_MIN
+    count_sec = count % SECS_IN_MIN
+
+    canvas.itemconfig(timer_text, text=f"{count_min:02}:{count_sec:02}")
+    if count > 0:
+        global timer
+        timer = window.after(1000, count_down, count - 1)
+    else:
+        start_timer()
+        marks = ""
+        work_sessions = phase//2
+        for _ in range(work_sessions):
+            marks += "✓"
+        check_marks.config(text=marks)
+
 
 # ---------------------------- UI SETUP ------------------------------- #
-
-
 window = Tk()
 window.title("Pomodoro")
-window.minsize(width=200, height=200)
-window.config(padx=20, pady=20, bg=YELLOW)
+window.config(padx=100, pady=50, bg=YELLOW)
 
-title_label = Label(text="Timer", font=(FONT_NAME, 48, "bold"), fg=GREEN, bg=YELLOW)
+
+title_label = Label(text="Timer", fg=GREEN, bg=YELLOW, font=(FONT_NAME, 50))
 title_label.grid(column=1, row=0)
 
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomato_img = PhotoImage(file="tomato.png")
 canvas.create_image(100, 112, image=tomato_img)
-time_text = canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 32, "bold"))
+timer_text = canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
 canvas.grid(column=1, row=1)
 
+start_button = Button(text="Start", highlightthickness=0, command=start_timer)
+start_button.grid(column=0, row=2)
 
-button_start = Button(text="Start", command=start_timer, highlightthickness=0)
-button_start.grid(column=0, row=2)
+reset_button = Button(text="Reset", highlightthickness=0, command=reset_timer)
+reset_button.grid(column=2, row=2)
 
-button_end = Button(text="Reset", command=end_timer, highlightthickness=0)
-button_end.grid(column=2, row=2)
-
-check_marks = Label(text="✓", font=(FONT_NAME, 16, "bold"), fg=GREEN, bg=YELLOW)
+check_marks = Label(fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
 
 
 
-# while keep_going:
-#     time.sleep(1)
-#     print(get_time())
+
+
 
 window.mainloop()
+
+
+
+
+
+
+
+
+
+
+
