@@ -7,10 +7,10 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-WORK_MIN = 2 # 25
-SHORT_BREAK_MIN = 1 # 5
-LONG_BREAK_MIN = 3 # 20
-SECS_IN_MIN = 10 # 60
+WORK_MIN = 25
+SHORT_BREAK_MIN = 5
+LONG_BREAK_MIN = 20
+SECS_IN_MIN = 60
 
 time_start = time.time_ns()
 time_end = time_start
