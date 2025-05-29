@@ -83,6 +83,22 @@ def save():
 # ------------------------- Search Website ---------------------------- #
 
 
+def search_site():
+    website = website_entry.get()
+    email = email_entry.get()
+    password = ""
+    data = {}
+    try:
+        with open(DATA_FILE, "r") as data_file:
+            # Read previous data
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showerror(title="Oops", message="Data file not found.")
+    else:
+        if website in data.keys():
+            messagebox.showinfo(title=website, message=f"email: {email}\npassword: {data[website]['password']}")
+        else:
+            messagebox.showwarning(title=website, message="No details for the website.")
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -97,28 +113,28 @@ canvas.grid(row=0, column=1)
 
 #Labels
 website_label = Label(text="Website:")
-website_label.grid(row=1, column=0)
+website_label.grid(row=1, column=0, sticky='e')
 email_label = Label(text="Email/Username:")
-email_label.grid(row=2, column=0)
+email_label.grid(row=2, column=0, sticky='e')
 password_label = Label(text="Password:")
-password_label.grid(row=3, column=0)
+password_label.grid(row=3, column=0, sticky='e')
 
 #Entries
 website_entry = Entry(width=35)
-website_entry.grid(row=1, column=1)
+website_entry.grid(row=1, column=1, sticky='ew')
 website_entry.focus()
 email_entry = Entry(width=35)
-email_entry.grid(row=2, column=1, columnspan=2)
+email_entry.grid(row=2, column=1, columnspan=2, sticky='ew')
 email_entry.insert(0, "frares@gmail.com")
 password_entry = Entry(width=21)
-password_entry.grid(row=3, column=1)
+password_entry.grid(row=3, column=1, sticky='ew')
 
 # Buttons
 search_button = Button(text="Search", command=search_site)
-search_button.grid(row=1, column=2)
+search_button.grid(row=1, column=2, sticky='we')
 generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(row=3, column=2)
 add_button = Button(text="Add", width=36, command=save)
-add_button.grid(row=4, column=1, columnspan=2)
+add_button.grid(row=4, column=1, columnspan=2, sticky='we')
 
 window.mainloop()
